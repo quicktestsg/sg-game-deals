@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+scripts/__pycache__/
+scripts/last_twitter_run.txt
