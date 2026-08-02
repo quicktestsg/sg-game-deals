@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advertise with SG Game Deals — Partner With Us</title>
+<meta name="description" content="Promote your game store, console shop, or gaming brand to thousands of Singapore gamers. Featured deals, sponsored guides, and newsletter shoutouts available.">
+<meta name="keywords" content="advertise Singapore gaming blog, SG game deals sponsorship, game store marketing Singapore, console shop promo partnership">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://quicktestsg.github.io/sg-game-deals/advertise.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SG Game Deals">
+<meta property="og:title" content="Advertise with SG Game Deals">
+<meta property="og:description" content="Promote your game store or gaming brand to Singapore gamers.">
+<meta property="og:url" content="https://quicktestsg.github.io/sg-game-deals/advertise.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1">
+<style>
+/* ─── Advertise Page Styles ─── */
+.ad-section { padding: 32px 0; }
+.ad-section:first-of-type { padding-top: 64px; }
+
+.ad-headline {
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+}
+.ad-headline em {
+    font-style: italic;
+    font-weight: 300;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+.ad-subheadline {
+    font-size: 19px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    margin-bottom: 48px;
+    line-height: 1.6;
+}
+
+/* Stats row */
+.ad-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 56px;
+}
+.ad-stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+}
+.ad-stat-num {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: block;
+    margin-bottom: 4px;
+}
+.ad-stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Package cards */
+.ad-packages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 56px;
+}
+.ad-pkg {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+}
+.ad-pkg:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.ad-pkg-featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 40px var(--accent-dim);
+}
+.ad-pkg-badge {
+    position: absolute;
+    top: -10px;
+    left: 28px;
+    background: var(--gradient);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.ad-pkg-name {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+}
+.ad-pkg-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+.ad-pkg-features {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+}
+.ad-pkg-features li {
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.ad-pkg-features li::before {
+    content: '✓';
+    color: var(--accent-3);
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.ad-pkg-price {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+.ad-pkg-price span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+.ad-pkg-note {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* Why work with us */
+.ad-why {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 48px;
+}
+.ad-why h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+.ad-why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.ad-why-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.ad-why-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+}
+.ad-why-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.ad-why-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* CTA */
+.ad-cta {
+    text-align: center;
+    padding: 48px 32px;
+    background: var(--gradient-subtle);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    margin-bottom: 32px;
+}
+.ad-cta h3 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+.ad-cta p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+.ad-cta-button {
+    display: inline-block;
+    background: var(--gradient);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px 36px;
+    border-radius: 100px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+}
+.ad-cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+.ad-disclosure {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+}
+.ad-disclosure strong { color: var(--text-secondary); }
+
+@media (max-width: 700px) {
+    .ad-stats { grid-template-columns: 1fr; }
+    .ad-packages { grid-template-columns: 1fr; }
+    .ad-why-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+    <!-- Google Analytics GA4 — Replace G-548117720 with your Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-548117720"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-548117720');
+    </script>
+</head>
+<body>
+
+<div class="mesh-bg">
+    <div class="mesh-orb mesh-orb-1"></div>
+    <div class="mesh-orb mesh-orb-2"></div>
+    <div class="mesh-orb mesh-orb-3"></div>
+</div>
+
+<div class="progress-bar"></div>
+
+<nav class="nav" id="nav">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-brand">
+            <span class="nav-brand-dot"></span>
+            SG Game Deals
+        </a>
+        <div class="nav-right">
+            <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div class="nav-dropdown" id="navDropdown">
+                <a href="about.html" class="nav-dropdown-link" data-en="About" data-zh="关于">About</a>
+                <a href="advertise.html" class="nav-dropdown-link" data-en="Advertise" data-zh="广告合作">Advertise</a>
+            </div>
+            <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+                <span class="lang-label">中文</span>
+            </button>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>
+                <svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="wrap">
+<section class="ad-section fade-in">
+    <div class="intro-badge">
+        <span class="intro-badge-dot"></span>
+        <span data-en="For Game Stores & Brands" data-zh="商户合作">For Game Stores & Brands</span>
+    </div>
+    <h1 class="ad-headline" data-en="Gamers are hunting for deals. <em>Make yours the one they find.</em>" data-zh="玩家们正在搜寻优惠，<em>让他们找到你。</em>">Gamers are hunting for deals. <em>Make yours the one they find.</em></h1>
+    <p class="ad-subheadline" data-en="SG Game Deals connects your game store, console shop, or gaming brand with deal-hunters across Singapore. Every day, we curate the promos gamers actually click. Here's how you can be part of it." data-zh="SG Game Deals 帮你连接新加坡全岛的玩家和优惠猎人。我们每天精选大家真正会点击的促销。以下是合作方式。">SG Game Deals connects your game store, console shop, or gaming brand with deal-hunters across Singapore. Every day, we curate the promos gamers actually click. Here's how you can be part of it.</p>
+
+    <!-- Stats -->
+    <div class="ad-stats">
+        <div class="ad-stat">
+            <span class="ad-stat-num">100+</span>
+            <span class="ad-stat-label" data-en="Active deals curated" data-zh="精选优惠">Active deals curated</span>
+        </div>
+        <div class="ad-stat">
+            <span class="ad-stat-num">Daily</span>
+            <span class="ad-stat-label" data-en="Fresh content updated" data-zh="每日更新">Fresh content updated</span>
+        </div>
+        <div class="ad-stat">
+            <span class="ad-stat-num">EN + 中文</span>
+            <span class="ad-stat-label" data-en="Bilingual audience reach" data-zh="双语覆盖">Bilingual audience reach</span>
+        </div>
+    </div>
+</section>
+
+<!-- Packages -->
+<section class="ad-section fade-in">
+    <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 20px; font-weight: 700;" data-en="Partnership Options" data-zh="合作方案">Partnership Options</h2>
+    <div class="ad-packages">
+
+        <!-- Featured Deal -->
+        <div class="ad-pkg">
+            <div class="ad-pkg-name" data-en="Featured Deal" data-zh="精选优惠">Featured Deal</div>
+            <p class="ad-pkg-desc" data-en="Your promo pinned to the top of Today's Deals for 7 days." data-zh="你的促销置顶在「今日优惠」首条，为期7天。">Your promo pinned to the top of Today's Deals for 7 days.</p>
+            <ul class="ad-pkg-features">
+                <li data-en="Top placement in deals feed" data-zh="优惠信息流置顶">Top placement in deals feed</li>
+                <li data-en="Sponsored badge + branded card" data-zh="赞助标识 + 品牌定制卡片">Sponsored badge + branded card</li>
+                <li data-en="Bilingual EN + Chinese listing" data-zh="中英双语展示">Bilingual EN + Chinese listing</li>
+                <li data-en="7-day run, then rotates out" data-zh="7天展示周期">7-day run, then rotates out</li>
+            </ul>
+        </div>
+
+        <!-- Sponsored Guide -->
+        <div class="ad-pkg ad-pkg-featured">
+            <div class="ad-pkg-badge" data-en="Popular" data-zh="热门">Popular</div>
+            <div class="ad-pkg-name" data-en="Sponsored Guide" data-zh="赞助文章">Sponsored Guide</div>
+            <p class="ad-pkg-desc" data-en="A full article featuring your brand, written by our editorial team." data-zh="由我们的编辑团队撰写一篇以你的品牌为主角的完整文章。">A full article featuring your brand, written by our editorial team.</p>
+            <ul class="ad-pkg-features">
+                <li data-en="Dedicated blog post (500-800 words)" data-zh="专属博文（500-800字）">Dedicated blog post (500-800 words)</li>
+                <li data-en="Your games, console highlights, store location" data-zh="你的游戏、主机亮点、店铺地址">Your games, console highlights, store location</li>
+                <li data-en="SEO-optimized for Google search" data-zh="Google搜索SEO优化">SEO-optimized for Google search</li>
+                <li data-en="Permanent URL — lives forever" data-zh="永久链接，长期有效">Permanent URL — lives forever</li>
+                <li data-en="Bilingual EN + Chinese" data-zh="中英双语">Bilingual EN + Chinese</li>
+            </ul>
+        </div>
+
+        <!-- Newsletter Shoutout -->
+        <div class="ad-pkg">
+            <div class="ad-pkg-name" data-en="Newsletter Shoutout" data-zh="邮件推广">Newsletter Shoutout</div>
+            <p class="ad-pkg-desc" data-en="Your deal featured in our weekly gaming deals newsletter." data-zh="你的优惠出现在我们的每周游戏优惠邮件中。">Your deal featured in our weekly gaming deals newsletter.</p>
+            <ul class="ad-pkg-features">
+                <li data-en="Dedicated section in newsletter" data-zh="邮件专属版块">Dedicated section in newsletter</li>
+                <li data-en="Direct link to your store or listing" data-zh="直达你的店铺或商品页">Direct link to your store or listing</li>
+                <li data-en="Bilingual EN + Chinese" data-zh="中英双语">Bilingual EN + Chinese</li>
+                <li data-en="Weekly send to engaged subscribers" data-zh="每周推送至活跃订阅者">Weekly send to engaged subscribers</li>
+            </ul>
+        </div>
+
+    </div>
+    <p class="ad-pkg-note" data-en="Pricing is customized based on your goals. Reach out for a quote — we'll work with your budget." data-zh="价格根据你的需求定制。联系我们获取报价——我们配合你的预算。">Pricing is customized based on your goals. Reach out for a quote — we'll work with your budget.</p>
+</section>
+
+<!-- Why us -->
+<section class="ad-section fade-in">
+    <div class="ad-why">
+        <h3 data-en="Why partner with SG Game Deals?" data-zh="为什么选择 SG Game Deals？">Why partner with SG Game Deals?</h3>
+        <div class="ad-why-grid">
+            <div class="ad-why-item">
+                <div class="ad-why-icon">🎯</div>
+                <div class="ad-why-text">
+                    <strong data-en="Targeted audience" data-zh="精准受众">Targeted audience</strong>
+                    <p data-en="Our readers are Singapore gamers actively looking for Switch, PS5, Xbox, and PC game deals. They're ready to buy — just looking for the right deal." data-zh="我们的读者是新加坡玩家，主动搜寻 Switch、PS5、Xbox 和 PC 游戏优惠。他们已经准备好购买——只需要遇到合适的优惠。">Our readers are Singapore gamers actively looking for Switch, PS5, Xbox, and PC game deals. They're ready to buy.</p>
+                </div>
+            </div>
+            <div class="ad-why-item">
+                <div class="ad-why-icon">🌐</div>
+                <div class="ad-why-text">
+                    <strong data-en="Bilingual reach" data-zh="双语触达">Bilingual reach</strong>
+                    <p data-en="Every listing is available in both English and Chinese — reaching both local Singaporean gamers and Chinese-speaking players." data-zh="每条内容都有中英双语——同时触达本地新加坡玩家和华语社群。">Every listing is available in both English and Chinese — reaching both local Singaporean gamers and Chinese-speaking players.</p>
+                </div>
+            </div>
+            <div class="ad-why-item">
+                <div class="ad-why-icon">🔍</div>
+                <div class="ad-why-text">
+                    <strong data-en="SEO advantage" data-zh="SEO优势">SEO advantage</strong>
+                    <p data-en="Our guides rank on Google for high-intent searches like 'cheap Switch games Singapore' and 'PS5 restock SG'. Your brand gets found." data-zh="我们的文章在 Google 上排名靠前，覆盖「新加坡 Switch 游戏」「PS5 补货」等高意图搜索。你的品牌会被看到。">Our guides rank on Google for high-intent searches like 'cheap Switch games Singapore' and 'PS5 restock SG'. Your brand gets found.</p>
+                </div>
+            </div>
+            <div class="ad-why-item">
+                <div class="ad-why-icon">⚡</div>
+                <div class="ad-why-text">
+                    <strong data-en="Fast turnaround" data-zh="快速上线">Fast turnaround</strong>
+                    <p data-en="From agreement to live listing in 48 hours. No agency layers, no waiting weeks for approval." data-zh="从确认到上线最快48小时。没有代理商层层审批，不用等几周。">From agreement to live listing in 48 hours. No agency layers, no waiting weeks for approval.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="ad-section fade-in">
+    <div class="ad-cta">
+        <h3 data-en="Ready to get your deal in front of Singapore gamers?" data-zh="准备好让玩家们看到你的优惠了吗？">Ready to get your deal in front of Singapore gamers?</h3>
+        <p data-en="Tell us about your game store or promo. We'll get back within 24 hours." data-zh="告诉我们你的游戏店铺或促销信息，我们会在24小时内回复。">Tell us about your game store or promo. We'll get back within 24 hours.</p>
+        <a href="mailto:quicktestsg@gmail.com?subject=Advertising%20Inquiry" class="ad-cta-button" data-en="Get in Touch →" data-zh="联系我们 →">Get in Touch →</a>
+    </div>
+</section>
+
+<!-- Disclosure -->
+<section class="ad-disclosure">
+<p><strong data-en="Editorial integrity:" data-zh="编辑诚信：">Editorial integrity:</strong> <span data-en="Sponsored content is always clearly marked with a 'Sponsored' badge. We never mix paid placements into our organic deal feed without disclosure. Our readers trust us because we're transparent — and that trust benefits our advertising partners too." data-zh="赞助内容始终会明确标注「Sponsored」标识。我们绝不将付费推广混入自然优惠信息流而不做声明。读者信任我们，因为我们对透明——这份信任同样让广告合作伙伴受益。">Sponsored content is always clearly marked with a 'Sponsored' badge. We never mix paid placements into our organic deal feed without disclosure. Our readers trust us because we're transparent — and that trust benefits our advertising partners too.</span></p>
+</section>
+
+</div>
+
+<footer class="footer">
+        <div class="footer-newsletter">
+            <h3 data-en="Never miss a deal" data-zh="不错过任何优惠">Never miss a deal</h3>
+            <p data-en="Get the best Singapore gaming deals delivered to your inbox. No spam, just savings." data-zh="每周精选新加坡最划算的游戏优惠，直接送到你的邮箱。不发垃圾邮件，只发省钱信息。">Get the best Singapore gaming deals delivered to your inbox. No spam, just savings.</p>
+            <form class="footer-newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="your@email.com" required data-en-placeholder="your@email.com" data-zh-placeholder="输入你的邮箱">
+                <button type="submit" data-en="Subscribe" data-zh="订阅">Subscribe</button>
+            </form>
+            <div class="footer-newsletter-success" id="newsletterSuccess" data-en="✅ Thanks! You're subscribed." data-zh="✅ 订阅成功！感谢加入。">✅ Thanks! You're subscribed.</div>
+        </div>
+        <div class="footer-social">
+            <a href="#" id="socialTelegram" aria-label="Telegram" title="Telegram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.061 3.345-.48.329-.913.49-1.302.48-.428-.008-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.324-.437.89-.663 3.498-1.524 5.83-2.529 6.995-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            </a>
+            <a href="#" id="socialInstagram" aria-label="Instagram" title="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+            </a>
+            <a href="mailto:quicktestsg@gmail.com" aria-label="Email" title="Email">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7 10-7"/></svg>
+            </a>
+        </div>
+        <div class="footer-links">
+            <a href="about.html" data-en="About" data-zh="关于">About</a>
+            <a href="advertise.html" data-en="Advertise" data-zh="广告合作">Advertise</a>
+        </div>
+    <p>© 2026 SG Game Deals · Built with Hermes Agent</p>
+</footer>
+
+<script src="app.js?v=1"></script>
+</body>
+</html>

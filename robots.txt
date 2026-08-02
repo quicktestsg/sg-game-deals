@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quicktestsg.github.io/sg-game-deals/sitemap.xml
