@@ -23,16 +23,59 @@ import html
 import urllib.request
 import hashlib
 from datetime import datetime, timezone, timedelta
-from bs4 import BeautifulSoup
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_PATH = os.path.join(SCRIPT_DIR, "deals_cache.json")
 
 # ─── Feed Sources ───
-# Each feed: (source_name, url, brand_color, deal_type_default, language)
-# deal_type: "1fl" (1-for-1), "deal" (promo/discount), "free" (freebie)
-# language: "en" or "zh" — affects which keyword filters apply
+# Focus on gaming news + deal sources. The cron agent will synthesize original
+# deal content from these feeds — we don't copy the original text verbatim.
 FEEDS = [
+    {
+        "name": "Nintendo Life",
+        "url": "https://www.nintendolife.com/feeds/latest",
+        "color": "#e60012",
+        "lang": "en",
+        "default_type": "deal",
+        "favicon": "https://www.google.com/s2/favicons?domain=nintendolife.com&sz=64",
+        "max_entries": 20,
+    },
+    {
+        "name": "Push Square",
+        "url": "https://www.pushsquare.com/feeds/latest",
+        "color": "#003791",
+        "lang": "en",
+        "default_type": "deal",
+        "favicon": "https://www.google.com/s2/favicons?domain=pushsquare.com&sz=64",
+        "max_entries": 20,
+    },
+    {
+        "name": "Pure Xbox",
+        "url": "https://www.purexbox.com/feeds/latest",
+        "color": "#107c10",
+        "lang": "en",
+        "default_type": "deal",
+        "favicon": "https://www.google.com/s2/favicons?domain=purexbox.com&sz=64",
+        "max_entries": 20,
+    },
+    {
+        "name": "VG247",
+        "url": "https://www.vg247.com/feed",
+        "color": "#8b5cf6",
+        "lang": "en",
+        "default_type": "deal",
+        "favicon": "https://www.google.com/s2/favicons?domain=vg247.com&sz=64",
+        "max_entries": 20,
+    },
+    {
+        "name": "Eurogamer",
+        "url": "https://www.eurogamer.net/feed",
+        "color": "#06b6d4",
+        "lang": "en",
+        "default_type": "deal",
+        "favicon": "https://www.google.com/s2/favicons?domain=eurogamer.net&sz=64",
+        "max_entries": 20,
+    },
     {
         "name": "Slickdeals Gaming",
         "url": "https://slickdeals.net/newsearch.php?mode=frontpage&searchtext=gaming+OR+switch+OR+ps5+OR+xbox&rss=1",
@@ -40,249 +83,139 @@ FEEDS = [
         "lang": "en",
         "default_type": "deal",
         "favicon": "https://www.google.com/s2/favicons?domain=slickdeals.net&sz=64",
-        "max_entries": 30,
-    },
-    {
-        "name": "Slickdeals Video Games",
-        "url": "https://slickdeals.net/newsearch.php?mode=frontpage&searchtext=video+games+OR+nintendo+OR+playstation&rss=1",
-        "color": "#8b5cf6",
-        "lang": "en",
-        "default_type": "deal",
-        "favicon": "https://www.google.com/s2/favicons?domain=slickdeals.net&sz=64",
-        "max_entries": 30,
-    },
-    {
-        "name": "IGN Deals",
-        "url": "https://feeds.ign.com/ign-articles-all",
-        "color": "#ef4444",
-        "lang": "en",
-        "default_type": "deal",
-        "favicon": "https://www.google.com/s2/favicons?domain=ign.com&sz=64",
-        "max_entries": 40,
+        "max_entries": 15,
     },
 ]
 
 # ─── Keyword Filters ───
-# Only keep entries that match gaming deal-related keywords.
-# This filters out non-deal posts (general news, reviews without deals, etc.)
+# Keep entries about deals, sales, discounts, new releases, DLC, etc.
 
 INCLUDE_KEYWORDS_EN = [
+    "deal", "deals", "discount", "sale", "offer", "price drop", "price cut",
+    "save", "off", "lowest", "cheapest", "free", "freebie",
+    "pre-order", "preorder", "launch", "releasing", "out now",
+    "eshop", "playstation store", "psn", "xbox store", "steam",
+    "game pass", "switch online", "bundle", "controller",
     "switch", "nintendo", "ps5", "ps4", "playstation",
     "xbox", "series x", "series s",
-    "game", "gaming", "console", "controller",
-    "steam", "eshop", "playstation store", "psn",
-    "deal", "deals", "discount", "sale", "offer",
-    "bundle", "off", "save", "lowest",
-    "$", "price", "promo",
-    "cartridge", "digital download",
+    "dlc", "expansion", "update", "patch",
+    "restock", "back in stock",
+    "review", "hands-on", "impressions",  # for guide synthesis
 ]
 
 INCLUDE_KEYWORDS_ZH = [
-    "游戏", "主机", "打折", "折扣", "特价", "特卖",
-    "免费", "赠送", "送",
-    "优惠", "促销", "闪购", "抢购",
-    "限时", "礼包",
+    "优惠", "打折", "折扣", "特价", "促销", "免费",
+    "预购", "首发", "新品",
 ]
 
 EXCLUDE_KEYWORDS = [
-    "fixed deposit", "savings account", "interest rate",
-    "insurance", "loan", "mortgage",
-    "property", "condo launch", "new launch",
-    "food", "restaurant", "dining", "meal",
-    "giveaway winner", "congratulations",
-    "定期存款", "利率", "保险", "食物", "餐厅",
+    "food", "restaurant", "dining", "recipe",
+    "insurance", "loan", "mortgage", "property",
+    "contest", "giveaway",  # too region-specific
+    "movie", "tv show", "anime",  # off-topic
 ]
 
 
-def matches_keywords(title, summary, lang):
-    """Check if entry matches gaming deal keywords. Returns True if it's a deal."""
-    text = (title + " " + summary).lower()
-
-    # Check excludes first
+def matches_keywords(title, excerpt=""):
+    text = f"{title} {excerpt}".lower()
     for kw in EXCLUDE_KEYWORDS:
         if kw in text:
             return False
-
-    # Check includes
-    keywords = INCLUDE_KEYWORDS_EN
-    if lang == "zh":
-        keywords = keywords + INCLUDE_KEYWORDS_ZH
-
-    for kw in keywords:
+    for kw in INCLUDE_KEYWORDS_EN:
         if kw.lower() in text:
             return True
-
+    for kw in INCLUDE_KEYWORDS_ZH:
+        if kw in text:
+            return True
     return False
 
 
-def detect_deal_type(title, summary):
-    """Auto-detect deal type from text."""
-    text = (title + " " + summary).lower()
-    if any(kw in text for kw in ["free", "giveaway", "免费", "赠送"]):
+def detect_deal_type(title, excerpt=""):
+    text = f"{title} {excerpt}".lower()
+    if any(kw in text for kw in ["free", "giveaway", "免费"]):
         return "free"
+    if any(kw in text for kw in ["1-for-1", "buy one get one", "bogo", "买一送一"]):
+        return "1fl"
     return "deal"
 
 
-def clean_html(raw_html):
-    """Strip HTML tags, decode entities, clean whitespace."""
-    if not raw_html:
-        return ""
-    soup = BeautifulSoup(raw_html, "html.parser")
-    # Remove script, style, emoji images
-    for tag in soup.find_all(["script", "style"]):
-        tag.decompose()
-    for img in soup.find_all("img"):
-        src = img.get("src", "")
-        # Remove WordPress emoji images
-        if "s.w.org/images/core/emoji" in src:
-            img.decompose()
-    text = soup.get_text(separator=" ", strip=True)
-    # Clean up whitespace
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
-
-
 def upgrade_image_url(url):
-    """Upgrade thumbnail URLs to higher resolution versions."""
+    """Try to get higher quality images from common CDN patterns."""
     if not url:
         return url
-    # Blogger/Google: /s72-c/ → /s640/ (72px → 640px)
-    if "blogger.googleusercontent.com" in url or "googleusercontent.com" in url:
-        url = re.sub(r'/s\d+-c?/', '/s640/', url)
-        url = re.sub(r'/s\d+/', '/s640/', url)
-        return url
-    # WordPress thumbnails: -150x150, -300x200, -550x292, etc → strip for full-size
-    # Matches patterns like image-550x292.jpg, image-300x200.png
-    url = re.sub(r'-\d+x\d+(\.(jpg|jpeg|png|webp|gif))', r'\1', url, flags=re.IGNORECASE)
+    # WordPress thumbnail → full size
+    url = re.sub(r'-\d+x\d+\.(jpg|png|webp)', r'.\1', url)
     return url
 
 
-def get_best_image(entry):
-    """Extract the best available image URL from a feed entry, upgraded to high-res."""
-    # 1. media_content
-    if 'media_content' in entry:
-        for mc in entry.media_content:
-            url = mc.get('url', '')
-            if url and 's.w.org/images/core/emoji' not in url:
-                return upgrade_image_url(url)
-    # 2. media_thumbnail
-    if 'media_thumbnail' in entry:
-        for mt in entry.media_thumbnail:
-            url = mt.get('url', '')
-            if url and 's.w.org/images/core/emoji' not in url:
-                return upgrade_image_url(url)
-    # 3. enclosures
-    if 'enclosures' in entry:
-        for en in entry.enclosures:
-            if 'image' in en.get('type', ''):
-                return upgrade_image_url(en.get('href', ''))
-    # 4. First <img> in content/summary
-    content = ""
-    if 'content' in entry:
-        content = entry.content[0].get('value', '')
-    elif 'summary' in entry:
-        content = entry.summary
-    imgs = re.findall(r'<img[^>]+src=["\']([^"\']+)["\']', content)
-    for img_url in imgs:
-        if 's.w.org/images/core/emoji' not in img_url:
-            return upgrade_image_url(img_url)
-    return None
+def strip_html(text):
+    """Remove HTML tags from text."""
+    clean = re.sub(r'<[^>]+>', '', text)
+    clean = html.unescape(clean)
+    return clean.strip()
 
 
-def get_excerpt(raw_html, max_chars=200):
-    """Extract a clean text excerpt from HTML content."""
-    text = clean_html(raw_html)
-    if len(text) > max_chars:
-        # Cut at word boundary
-        cut = text[:max_chars].rsplit(' ', 1)[0]
-        return cut + "..."
+def extract_excerpt(entry):
+    """Get a clean text excerpt from the RSS entry."""
+    # Try summary first
+    raw = entry.get("summary", "") or entry.get("description", "")
+    if not raw:
+        raw = entry.get("content", [{}])[0].get("value", "") if entry.get("content") else ""
+    text = strip_html(raw)
+    # Truncate
+    if len(text) > 200:
+        text = text[:197].rsplit(" ", 1)[0] + "..."
     return text
 
 
+def extract_image(entry):
+    """Extract first image from RSS entry."""
+    # 1. media_thumbnail / media_content
+    for key in ("media_thumbnail", "media_content"):
+        media = entry.get(key, [])
+        if media and isinstance(media, list) and media[0].get("url"):
+            return upgrade_image_url(media[0]["url"])
+    # 2. Enclosures
+    for enc in entry.get("enclosures", []):
+        if enc.get("type", "").startswith("image") and enc.get("href"):
+            return upgrade_image_url(enc["href"])
+    # 3. Parse from summary HTML
+    raw = entry.get("summary", "") or ""
+    m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', raw)
+    if m:
+        return upgrade_image_url(m.group(1))
+    return None
+
+
 def parse_date(entry):
-    """Parse feed entry date to ISO 8601 string."""
-    for field in ('published_parsed', 'updated_parsed'):
-        if field in entry and entry[field]:
-            dt = datetime(*entry[field][:6], tzinfo=timezone.utc)
-            return dt.isoformat()
-    # Fallback: try parsing string directly
-    for field in ('published', 'updated'):
-        if field in entry:
+    """Parse entry date to ISO format."""
+    for field in ("published_parsed", "updated_parsed"):
+        parsed = entry.get(field)
+        if parsed:
             try:
-                dt = datetime.fromisoformat(entry[field].replace('Z', '+00:00'))
+                dt = datetime(*parsed[:6], tzinfo=timezone.utc)
+                return dt.isoformat()
+            except Exception:
+                pass
+    # Fallback: string parsing
+    for field in ("published", "updated"):
+        date_str = entry.get(field, "")
+        if date_str:
+            try:
+                from email.utils import parsedate_to_datetime
+                dt = parsedate_to_datetime(date_str)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
                 return dt.isoformat()
             except Exception:
                 pass
     return datetime.now(timezone.utc).isoformat()
 
 
-def generate_id(entry):
-    """Generate a unique ID for dedup. Uses link hash."""
-    link = entry.get('link', '') or entry.get('id', '')
-    if link:
-        return hashlib.md5(link.encode()).hexdigest()[:16]
-    return hashlib.md5(entry.get('title', '').encode()).hexdigest()[:16]
-
-
-def fetch_feed(feed_config):
-    """Fetch and parse a single RSS feed. Returns list of deal entries."""
-    name = feed_config["name"]
-    url = feed_config["url"]
-    lang = feed_config["lang"]
-    default_type = feed_config["default_type"]
-
-    try:
-        d = feedparser.parse(url)
-        if d.bozo and not d.entries:
-            print(f"  ⚠ {name}: feed parsed but no entries", file=sys.stderr)
-            return []
-
-        deals = []
-        max_entries = feed_config.get("max_entries", 50)
-        for entry in d.entries[:max_entries]:
-            title = entry.get('title', '')
-            if not title:
-                continue
-
-            # Get content for keyword matching
-            raw_content = ""
-            if 'content' in entry:
-                raw_content = entry.content[0].get('value', '')
-            elif 'summary' in entry:
-                raw_content = entry.summary
-
-            summary = get_excerpt(raw_content, max_chars=300)
-
-            # Filter by keywords
-            if not matches_keywords(title, summary, lang):
-                continue
-
-            # Extract structured data
-            deal = {
-                "id": generate_id(entry),
-                "source_type": "rss",
-                "source_name": name,
-                "source_url": entry.get('link', ''),
-                "source_color": feed_config["color"],
-                "source_favicon": feed_config["favicon"],
-                "source_lang": lang,
-                "title": clean_html(title),
-                "excerpt": summary,
-                "image": get_best_image(entry),
-                "deal_type": detect_deal_type(title, summary),
-                "country": "SG",
-                "published_at": parse_date(entry),
-                "fetched_at": datetime.now(timezone.utc).isoformat(),
-                "translation_zh": "",
-            }
-            deals.append(deal)
-
-        print(f"  ✓ {name}: {len(deals)} deals from {len(d.entries)} entries", file=sys.stderr)
-        return deals
-
-    except Exception as e:
-        print(f"  ✗ {name}: {e}", file=sys.stderr)
-        return []
+def make_id(entry):
+    """Generate stable unique ID from entry."""
+    raw = entry.get("id", "") or entry.get("link", "") or entry.get("title", "")
+    return hashlib.md5(raw.encode()).hexdigest()[:16]
 
 
 def load_cache():
@@ -297,56 +230,6 @@ def save_cache(cache):
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-def merge_rss_deals(cache, new_deals, max_age_days=7):
-    """
-    Merge RSS deals into cache, skipping duplicates by ID.
-    Only keep deals from the last max_age_days.
-    Returns (cache, num_new, num_skipped).
-    """
-    existing_ids = {d["id"] for d in cache["deals"]}
-    existing_links = {
-        d.get("source_url", "") or d.get("url", "")
-        for d in cache["deals"]
-    }
-    num_new = 0
-    num_skipped = 0
-    cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
-
-    for deal in new_deals:
-        if deal["id"] in existing_ids or deal["source_url"] in existing_links:
-            num_skipped += 1
-            continue
-        # Check age
-        try:
-            pub_date = datetime.fromisoformat(deal["published_at"].replace("Z", "+00:00"))
-            if pub_date < cutoff:
-                continue
-        except Exception:
-            pass
-
-        cache["deals"].append(deal)
-        existing_ids.add(deal["id"])
-        existing_links.add(deal["source_url"])
-        num_new += 1
-
-    return cache, num_new, num_skipped
-
-
-def list_rss_deals(cache):
-    """Print all RSS-sourced deals in the cache."""
-    rss_deals = [d for d in cache["deals"] if d.get("source_type") == "rss"]
-    if not rss_deals:
-        print("No RSS deals in cache.")
-        return
-    print(f"\n{'='*80}")
-    print(f"RSS Deals in Cache: {len(rss_deals)}")
-    print(f"{'='*80}")
-    for d in sorted(rss_deals, key=lambda x: x.get("published_at", ""), reverse=True):
-        print(f"\n  [{d['source_name']}] {d['title'][:70]}")
-        print(f"    type: {d['deal_type']}  lang: {d['source_lang']}  img: {'✓' if d.get('image') else '✗'}")
-        print(f"    link: {d['source_url'][:70]}")
-
-
 def main():
     dry_run = "--dry-run" in sys.argv
     list_only = "--list" in sys.argv
@@ -354,41 +237,85 @@ def main():
     cache = load_cache()
 
     if list_only:
-        list_rss_deals(cache)
+        rss = [d for d in cache["deals"] if d.get("source_type") == "rss"]
+        print(f"\nRSS deals in cache: {len(rss)}")
+        for d in sorted(rss, key=lambda x: x.get("published_at", ""), reverse=True)[:20]:
+            print(f"  [{d.get('source_name','')}] {d.get('title','')[:70]}")
         return
 
+    existing_ids = {d["id"] for d in cache["deals"]}
     print(f"Fetching RSS feeds from {len(FEEDS)} sources...", file=sys.stderr)
+    print(f"Existing cached IDs: {len(existing_ids)}", file=sys.stderr)
+
     all_new = []
-    for feed_cfg in FEEDS:
-        deals = fetch_feed(feed_cfg)
-        all_new.extend(deals)
+    for feed_config in FEEDS:
+        try:
+            feed = feedparser.parse(feed_config["url"])
+            if not feed.entries:
+                print(f"  ⚠ {feed_config['name']}: no entries", file=sys.stderr)
+                continue
+
+            count = 0
+            skipped = 0
+            for entry in feed.entries[:feed_config["max_entries"]]:
+                title = strip_html(entry.get("title", ""))
+                excerpt = extract_excerpt(entry)
+                link = entry.get("link", "")
+
+                if not title:
+                    skipped += 1
+                    continue
+
+                # Keyword filter
+                if not matches_keywords(title, excerpt):
+                    skipped += 1
+                    continue
+
+                deal_id = make_id(entry)
+                if deal_id in existing_ids:
+                    skipped += 1
+                    continue
+
+                deal = {
+                    "id": deal_id,
+                    "title": title,
+                    "excerpt": excerpt,
+                    "image": extract_image(entry),
+                    "source_type": "rss",
+                    "source_name": feed_config["name"],
+                    "source_url": link,
+                    "source_favicon": feed_config["favicon"],
+                    "source_color": feed_config["color"],
+                    "deal_type": detect_deal_type(title, excerpt),
+                    "country": "SG",
+                    "published_at": parse_date(entry),
+                    "translation_zh": "",
+                    "excerpt_zh": "",
+                }
+                all_new.append(deal)
+                existing_ids.add(deal_id)
+                count += 1
+
+            print(f"  ✓ {feed_config['name']}: {count} deals from {len(feed.entries)} entries ({skipped} skipped)", file=sys.stderr)
+        except Exception as e:
+            print(f"  ⚠ {feed_config['name']}: {e}", file=sys.stderr)
 
     print(f"\nTotal candidate deals: {len(all_new)}", file=sys.stderr)
 
     if dry_run:
-        print("\n[DRY RUN] Deals that would be added:", file=sys.stderr)
-        existing_ids = {d["id"] for d in cache["deals"]}
-        existing_links = {d.get("source_url", "") or d.get("url", "") for d in cache["deals"]}
         for d in all_new:
-            is_dup = d["id"] in existing_ids or d["source_url"] in existing_links
-            tag = "DUP" if is_dup else "NEW"
-            print(f"  [{tag}] [{d['source_name']}] {d['title'][:70]}")
+            print(f"  [NEW] [{d['source_name']}] {d['title'][:70]}")
         return
 
     before = len(cache["deals"])
-    cache, num_new, num_skipped = merge_rss_deals(cache, all_new)
+    cache["deals"].extend(all_new)
     save_cache(cache)
-
-    rss_count = len([d for d in cache["deals"] if d.get("source_type") == "rss"])
-    twitter_count = len([d for d in cache["deals"] if d.get("source_type") != "rss"])
 
     print(f"\n{'='*60}", file=sys.stderr)
     print(f"RSS Fetch Complete", file=sys.stderr)
     print(f"{'='*60}", file=sys.stderr)
-    print(f"  New deals added:    {num_new}", file=sys.stderr)
-    print(f"  Duplicates skipped: {num_skipped}", file=sys.stderr)
-    print(f"  Cache before:       {before}", file=sys.stderr)
-    print(f"  Cache after:        {len(cache['deals'])} (Twitter: {twitter_count}, RSS: {rss_count})", file=sys.stderr)
+    print(f"  New deals added:    {len(all_new)}", file=sys.stderr)
+    print(f"  Cache:              {before} → {len(cache['deals'])}", file=sys.stderr)
 
 
 if __name__ == "__main__":
