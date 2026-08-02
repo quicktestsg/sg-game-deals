@@ -1,4 +1,4 @@
-// ═══ SG Game Deals ═══
+// ═══ GG Deals ═══
 
 // ─── Theme toggle ───
 const root = document.documentElement;
@@ -18,8 +18,8 @@ const i18n = {
         'nav.about': 'About',
         'nav.posts': 'Guides',
         'intro.badge': 'Fresh deals daily',
-        'intro.tagline': 'Singapore gaming deals & steals, <em>updated every day.</em>',
-        'intro.bio': 'Switch drops, PS5 restocks, game sales, and all the deals worth your time. Curated from across the island.',
+        'intro.tagline': 'The best gaming deals & steals, <em>updated every day.</em>',
+        'intro.bio': 'Switch drops, PS5 restocks, Steam sales, eShop discounts, and Game Pass additions. We scan the gaming world so you never miss a deal.',
         'blog.recent': 'Recent Guides',
         'deals.title': 'Today\'s Deals',
         'deals.subtitle': 'Curated from social media — Switch drops, PS5 restocks, game sales & flash promos',
@@ -27,7 +27,7 @@ const i18n = {
         'preview.allPosts': 'View all',
         'preview.allDeals': 'View all deals',
         'about.title': 'About',
-        'about.p1': 'SG Game Deals is a daily-updated blog that rounds up the best gaming deals, promos, and steals across Singapore.',
+        'about.p1': 'GG Deals tracks the best gaming deals across all platforms — Nintendo Switch, PlayStation, Xbox, and PC. From eShop flash sales to Steam seasonal events, Game Pass additions to PSN discounts.',
         'about.p2': 'From Nintendo Switch drops to PS5 restocks, eShop sales to Xbox bargains — if it\'s a deal worth sharing, it\'s here. We expand country by country.',
         'about.p3': 'Updated daily by an AI agent scanning social media.',
         'lang.switchTo': '中文',
@@ -37,8 +37,8 @@ const i18n = {
         'nav.about': '关于',
         'nav.posts': '攻略',
         'intro.badge': '每日更新好价',
-        'intro.tagline': '新加坡游戏优惠，<em>每天更新。</em>',
-        'intro.bio': 'Switch 降价、PS5 补货、游戏特卖，所有值得关注的优惠都在这里。精选全岛好价。',
+        'intro.tagline': '全球游戏优惠，<em>每天更新。</em>',
+        'intro.bio': 'Switch 降价、PS5 补货、Steam 大促、eShop 折扣、Game Pass 新增。我们扫描全球游戏世界，让你不错过任何好价。',
         'blog.recent': '最新攻略',
         'deals.title': '今日优惠',
         'deals.subtitle': '精选自社交媒体——Switch 降价、PS5 补货、游戏特卖与限时促销',
@@ -46,7 +46,7 @@ const i18n = {
         'preview.allPosts': '查看全部',
         'preview.allDeals': '查看全部优惠',
         'about.title': '关于',
-        'about.p1': 'SG Game Deals 是一个每日更新的博客，汇总新加坡最划算的游戏优惠、促销和好价。',
+        'about.p1': 'GG Deals 为你追踪全平台最划算的游戏优惠——Nintendo Switch、PlayStation、Xbox 和 PC。从 eShop 闪购到 Steam 季节大促，从 Game Pass 新增到 PSN 折扣。',
         'about.p2': '从 Nintendo Switch 降价到 PS5 补货，从 eShop 特卖到 Xbox 好价——只要是值得分享的优惠，都在这里。我们会逐步扩展到更多国家。',
         'about.p3': '每天由 AI 智能体从社交媒体精选更新。',
         'lang.switchTo': 'EN',
@@ -266,7 +266,7 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mqervnja';
                 const res = await fetch(FORMSPREE_ENDPOINT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email, _subject: 'New newsletter signup', source: 'sg-game-deals' })
+                    body: JSON.stringify({ email, _subject: 'New newsletter signup', source: 'gg-deals' })
                 });
                 if (!res.ok) throw new Error('Submit failed');
             }

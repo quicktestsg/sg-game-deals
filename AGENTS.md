@@ -1,4 +1,4 @@
-# AGENTS.md — SG Game Deals Operating Manual
+# AGENTS.md — GG Deals Operating Manual
 
 > **Read this before touching anything.** This file is injected into every agent session working in this repo.
 

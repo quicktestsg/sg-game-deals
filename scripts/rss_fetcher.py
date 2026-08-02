@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RSS Feed Fetcher for SG Game Deals.
+RSS Feed Fetcher for GG Deals.
 
 Fetches deal/promo entries from gaming deal blogs and aggregators via their RSS
 feeds, extracts structured data (title, excerpt, image, date, link), and merges

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fetch tweet/post data via syndication API and generate native HTML cards
-for the SG Food Deals design system.
+for the GG Deals design system.
 
 INCREMENTAL MODE:
 - Deals are stored persistently in deals_cache.json

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Twitter/X Deal Fetcher for SG Game Deals.
+Twitter/X Deal Fetcher for GG Deals.
 
 Only fetches tweets NEWER than the last run — zero overlap with cached deals.
 Records last-run timestamp in scripts/last_twitter_run.txt.

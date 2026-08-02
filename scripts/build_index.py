@@ -176,9 +176,9 @@ def generate_jsonld(posts, cache):
     website_schema = {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "SG Game Deals",
+        "name": "GG Deals",
         "url": f"{BASE_URL}/",
-        "description": "Daily-updated Singapore gaming deals, Nintendo Switch drops, PS5 restocks, Xbox sales, and PC game bargains.",
+        "description": "Daily-updated gaming deals — Nintendo Switch drops, PS5 restocks, Xbox sales, Steam bargains and Game Pass additions.",
         "inLanguage": ["en", "zh"],
     }
 
@@ -186,12 +186,12 @@ def generate_jsonld(posts, cache):
     blog_schema = {
         "@context": "https://schema.org",
         "@type": "Blog",
-        "name": "SG Game Deals",
+        "name": "GG Deals",
         "url": f"{BASE_URL}/",
-        "description": "Singapore gaming deals, Switch drops, PS5 restocks, Xbox sales, and PC game bargains updated daily.",
+        "description": "Global gaming deals — Switch drops, PS5 restocks, Xbox sales, Steam bargains and Game Pass additions, updated daily.",
         "publisher": {
             "@type": "Organization",
-            "name": "SG Game Deals",
+            "name": "GG Deals",
             "url": f"{BASE_URL}/",
         },
         "blogPost": [],
@@ -203,7 +203,7 @@ def generate_jsonld(posts, cache):
             "headline": post["title_en"],
             "url": f"{BASE_URL}/posts/{post['date']}-{post['slug']}.html",
             "datePublished": post["date"],
-            "author": {"@type": "Organization", "name": "SG Game Deals"},
+            "author": {"@type": "Organization", "name": "GG Deals"},
             "description": post.get("excerpt_en", ""),
             "inLanguage": "en",
         })
@@ -215,34 +215,34 @@ def generate_jsonld(posts, cache):
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": "Where can I find cheap Nintendo Switch games in Singapore?",
+                "name": "Where to find the best Nintendo Switch deals?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "SG Game Deals curates daily Switch game deals from Qisahn, GameXtreme, Shopee, Lazada, and Amazon SG. Physical cartridges are often cheapest at Qisahn and during Shopee/Lazada mega sales. For digital games, the Nintendo eShop offers regional pricing — the Singapore eShop is mid-tier; South Africa and Mexico eShops are often cheaper. Check the Today's Deals section for the latest Switch drops."
+                    "text": "The best Nintendo Switch deals come from a few sources: Nintendo eShop regional pricing (the South Africa, Mexico and Turkey eShops are often cheaper than the US/EU stores for the exact same game), retail clearance on physical cartridges, and seasonal sales like Black Friday and the eShop Big Ol' Super Sale. GG Deals curates the latest Switch game drops and cartridge deals daily — check the Today's Deals section for what's hot right now."
                 }
             },
             {
                 "@type": "Question",
-                "name": "What are the best PS5 deals in Singapore?",
+                "name": "When do PS5 games go on sale?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "PS5 console restocks and deals appear at Qisahn, GameXtreme, Shopee, and Amazon SG. PSN (PlayStation Store) Singapore runs regular sales — the biggest are the 'Season of Sale' (March), 'Days of Play' (May-June), Black Friday (November), and Holiday Sale (December). Physical game discs are cheapest second-hand at Qisahn trade-in. Follow SG Game Deals for the latest PS5 restock alerts and game sale notifications."
+                    "text": "PlayStation Store runs predictable sale cycles: 'Days of Play' (May-June), 'Season of Sale' (March), Black Friday/Cyber Monday (late November), and the Holiday Sale (December-January). First-party titles typically drop 40-60% during these windows, and PS Plus members get an extra 10-20% off. Older AAA games hit their lowest prices during Black Friday. Follow GG Deals for PS5 restock alerts and sale notifications."
                 }
             },
             {
                 "@type": "Question",
-                "name": "How can I save money on games in Singapore?",
+                "name": "How to get cheap games on Steam and eShop?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Buy physical cartridges and trade them in at Qisahn for store credit. Shop the eShop with region-switching (South Africa, Mexico, Turkey accounts). Stack credit card gaming promos (DBS, UOB, OCBC Shopee/Lazada vouchers). Wait for Steam seasonal sales (Summer, Autumn, Winter) for PC games. Use PlayStation Plus / Xbox Game Pass for subscription access. Monitor SG Game Deals daily for flash drops and promo codes."
+                    "text": "For Steam, wait for the four seasonal sales (Spring, Summer, Autumn, Winter) where wishlist games drop 30-80%, and grab free games every Thursday from the Epic Games Store. For the Nintendo eShop, create accounts in cheaper regions (South Africa, Mexico, Turkey) and fund them with region-appropriate gift cards — the same game can cost 30-50% less than the US eShop. Xbox Game Pass is also excellent value, offering 100+ games for a monthly fee. GG Deals tracks all of these daily."
                 }
             },
             {
                 "@type": "Question",
-                "name": "新加坡哪里有游戏优惠？",
+                "name": "什么是游戏打折季？哪里可以找到最便宜的游戏？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "SG Game Deals 每天更新新加坡最划算的游戏优惠，包括 Nintendo Switch 游戏、PS5 主机和游戏、Xbox 优惠以及 PC 游戏特卖。来源包括 Qisahn、GameXtreme、Shopee、Lazada、Amazon SG 以及 PlayStation Store、Nintendo eShop、Steam、Xbox Store 的最新促销信息。"
+                    "text": "游戏打折季是各大平台定期举办的促销活动：Steam 每年有春、夏、秋、冬四次大促，PlayStation Store 有 Days of Play（5-6月）和黑五大促（11月），Nintendo eShop 也有区域性闪购和 Black Friday 折扣。此外，eShop 跨区购买（南非、墨西哥、土耳其区）通常比美区便宜 30-50%，Epic 每周四还送免费游戏。GG Deals 每天为你精选全平台最划算的游戏优惠。"
                 }
             },
         ]
