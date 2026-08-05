@@ -32,7 +32,11 @@ BIRD = "/opt/homebrew/bin/bird"
 SOURCES = [
     {
         "label": "ShopeeSG",
-        "query": "from:Shopee_SG gaming OR Switch OR Nintendo OR PS5",
+        # NOTE: bird's search treats bare "OR" terms as global, not scoped to
+        # the from: account. We query the account's full feed and let the
+        # keyword filter do the scoping, so we never pull random global tweets
+        # that merely mention "switch"/"PS5".
+        "query": "from:Shopee_SG",
         "color": "#ee4d2d",
         "default_type": "deal",
     },

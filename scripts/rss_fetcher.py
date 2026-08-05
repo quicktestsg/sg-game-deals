@@ -113,6 +113,13 @@ EXCLUDE_KEYWORDS = [
     "insurance", "loan", "mortgage", "property",
     "contest", "giveaway",  # too region-specific
     "movie", "tv show", "anime",  # off-topic
+    # Non-gaming merch that Slickdeals' loose search surfaces — these slip
+    # through because generic words like "deal"/"off"/"save" match any listing.
+    "tool chest", "rolling tool", "air conditioner", "mini split",
+    "fleece hoodie", "trail running shoe", "running shoe",
+    "reading light", "supertank printer", "vinyl",
+    "suction cup", "air duster", "compressed air",
+    "collectible figure", "action figure",  # toys, not games
 ]
 
 

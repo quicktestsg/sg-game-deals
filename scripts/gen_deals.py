@@ -66,8 +66,15 @@ def format_count(n):
 
 
 def format_date(date_str):
-    """Format ISO date to 'Jul 25' style, converted to SGT (UTC+8)."""
-    dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+    """Format ISO date to 'Jul 25' style, converted to SGT (UTC+8).
+    Returns '' for missing/unparseable dates so build never crashes.
+    """
+    if not date_str or not date_str.strip():
+        return ""
+    try:
+        dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return ""
     sgt = dt + timedelta(hours=8)
     return sgt.strftime("%b %-d")
 
