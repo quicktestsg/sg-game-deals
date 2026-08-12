@@ -120,6 +120,17 @@ EXCLUDE_KEYWORDS = [
     "reading light", "supertank printer", "vinyl",
     "suction cup", "air duster", "compressed air",
     "collectible figure", "action figure",  # toys, not games
+    # Apparel / footwear that Slickdeals surfaces alongside "gaming" searches
+    "shoes", "sneakers", "hiking shoes", "golf shoes", "bralette",
+    "athletic shoes", "apparel", "jacket", " hoodie", "sock",
+    # Home / kitchen / tools / non-gaming electronics
+    "coffee", "ground coffee", "stuffing mix", "grocery",
+    "borescope", "socket set", "right angle attachment",
+    "tool organizer", "deep drawer", "water bottle",
+    "insulated stainless", "smart tv", '4k uhd', "led smart tv",
+    # Travel / loyalty / subscriptions (non-gaming)
+    "vpn", "rewards offer", "elite night credit", "hotel",
+    "subscription plan",  # generic sub plans (Surfshark, etc.)
 ]
 
 
